@@ -19,10 +19,16 @@ namespace Microsoft.Bot.Sample.LuisBot
         public const string Entity_Device = "HomeAutomation.Device";
         public const string Entity_Room = "HomeAutomation.Room";
         public const string Entity_Operation = "HomeAutomation.Operation";
+        public const string Entity_TVChannel = "TV.ChannelName";
 
         // Intents
         public const string Intent_TurnOn = "HomeAutomation.TurnOn";
         public const string Intent_TurnOff = "HomeAutomation.TurnOff";
+
+        public const string Intent_TVGuide = "TV.ShowGuide";
+        public const string Intent_TVChannel = "TV.ChangeChannel";
+        public const string Intent_TVWatch = "TV.WatchTV";
+
         public const string Intent_None = "None";
 
         public BasicLuisDialog() : base(new LuisService(new LuisModelAttribute(
@@ -43,12 +49,30 @@ namespace Microsoft.Bot.Sample.LuisBot
             await this.ShowLuisResult(context, result);
         }
 
+        [LuisIntent(Intent_TVChannel)]
+        public async Task TVChannelIntent(IDialogContext context, LuisResult result)
+        {
+            await this.ShowLuisResult(context, result);
+        }
+
+        [LuisIntent(Intent_TVGuide)]
+        public async Task TVGuideIntent(IDialogContext context, LuisResult result)
+        {
+            await this.ShowLuisResult(context, result);
+        }
+
+        [LuisIntent(Intent_TVWatch)]
+        public async Task TVWatchIntent(IDialogContext context, LuisResult result)
+        {
+            await this.ShowLuisResult(context, result);
+        }
+
         [LuisIntent("None")]
         public async Task NoneIntent(IDialogContext context, LuisResult result)
         {
             await this.ShowLuisResult(context, result);
         }
-
+        
         private async Task ShowLuisResult(IDialogContext context, LuisResult result) 
         {
             // get recognized entities
