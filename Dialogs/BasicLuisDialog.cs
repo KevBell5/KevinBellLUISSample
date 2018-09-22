@@ -29,6 +29,7 @@ namespace Microsoft.Bot.Sample.LuisBot
         public const string Intent_TVChannel = "TV.ChangeChannel";
         public const string Intent_TVWatch = "TV.WatchTV";
 
+        public const string Intent_Help = "Help";
         public const string Intent_None = "None";
 
         public BasicLuisDialog() : base(new LuisService(new LuisModelAttribute(
@@ -67,7 +68,13 @@ namespace Microsoft.Bot.Sample.LuisBot
             await this.ShowLuisResult(context, result);
         }
 
-        [LuisIntent("None")]
+        [LuisIntent(Intent_Help)]
+        public async Task HelpIntent(IDialogContext context, LuisResult result)
+        {
+            await this.ShowLuisResult(context, result);
+        }
+
+        [LuisIntent(Intent_None)]
         public async Task NoneIntent(IDialogContext context, LuisResult result)
         {
             await this.ShowLuisResult(context, result);
@@ -81,7 +88,20 @@ namespace Microsoft.Bot.Sample.LuisBot
             // round number
             string roundedScore = result.Intents[0].Score != null ? (Math.Round(result.Intents[0].Score.Value, 2).ToString()) : "0";
 
-            await context.PostAsync($"**Query**: {result.Query}, **Intent**: {result.Intents[0].Intent}, **Score**: {roundedScore}. **Entities**: {entities}");
+            //Check if the user is asking for help
+            if (result.Intents[0].Intent == Intent_Help)
+            {
+                await context.PostAsync($"These are the kind of tasks you can perform:\n" +
+                    $"Watch <channel name>\n" +
+                    $"Show guide\n" +
+                    $"Play <channel name>\n" +
+                    $"Turn off/on <room> lights");
+
+            }
+            else
+            {
+                await context.PostAsync($"**Query**: {result.Query}, **Intent**: {result.Intents[0].Intent}, **Score**: {roundedScore}. **Entities**: {entities}");
+            }
             context.Wait(MessageReceived);
         }
 
